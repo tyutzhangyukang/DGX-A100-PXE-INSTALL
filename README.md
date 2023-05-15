@@ -1,5 +1,7 @@
 # DGX-A100-PXE-INSTALL
 
+# 下方操作已封装成镜像，可参考https://hub.docker.com/r/zhangyukang/pxe-server-for_dgx-a100-a800 ； docker pull zhangyukang/pxe-server-for_dgx-a100-a800
+
 DGX A100 PXE安装流程
 
 参考资料： https://docs.nvidia.com/dgx/dgx-os-5-user-guide/appendix_d_pxe_boot_setup.html
