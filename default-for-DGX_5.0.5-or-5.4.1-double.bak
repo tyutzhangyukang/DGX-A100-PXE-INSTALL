@@ -1,0 +1,15 @@
+default menu
+prompt 0
+timeout 300
+menu title DGX Install Images ( 5.0.5 5.4.1)
+label http/dgxbaseos-5.0.5
+menu label DGXBaseOS 5.0.5 (Base OS)
+	kernel http://172.17.224.139/dgxbaseos-5.0.5/vmlinuz
+	initrd http://172.17.224.139/dgxbaseos-5.0.5/initrd
+	append boot=live nooemconfig components union=overlay noswap noeject ip::enp97s0f1:dhcp ethdevice-timeout=60 fetch=http://172.17.224.139/dgxbaseos-5.0.5/DGXOS-5.0.5-2021-05-03-15-52-28.iso apparmor=0 elevator=noop nvme-core.multipath=n nouveau.modeset=0 rebuild-raid offwhendone console=tty0 console=ttyS1,115200n8  set-nvme-boot-1st force-curtin=http://172.17.224.139/curtin-a100/dgx_a100-curtin.yaml
+label http/dgxbaseos-5.4.1
+	menu label DGXBaseOS 5.4.1 (Base OS)
+	kernel http://172.17.224.139/dgxbaseos-5.4.1/vmlinuz
+	initrd http://172.17.224.139/dgxbaseos-5.4.1/initrd
+	append boot=live nooemconfig components union=overlay noswap noeject ip::enp97s0f1:dhcp ethdevice-timeout=60 fetch=http://172.17.224.139/dgxbaseos-5.4.1/DGXOS-5.4.1-2022-10-11-17-49-32.iso apparmor=0 elevator=noop nvme-core.multipath=n nouveau.modeset=0 rebuild-raid offwhendone console=tty0 console=ttyS1,115200n8  set-nvme-boot-1st force-curtin=http://172.17.224.139/curtin-a800/dgx_a800-curtin.yaml
+

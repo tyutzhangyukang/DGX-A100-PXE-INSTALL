@@ -1,0 +1,368 @@
+apt:
+  preserve_sources_list: false
+  sources_list: |
+    # network: will be available to target from early stage
+    deb [trusted=yes] http://127.0.0.1/ /
+  conf: |
+    Dpkg::Options {
+      "--force-confdef";
+      "--force-confold";
+    };
+
+install:
+  log_file: /var/log/curtin.log
+  error_tarfile: /var/log/curtin/curtin-error-logs.tar
+  post_files:
+    - /var/log/curtin.log
+    - /var/log/syslog
+  save_install_config: /var/log/curtin-conf.yaml
+  save_install_log: /var/log/curtin-install.log
+  umount: disabled
+
+kernel:
+  package: CHANGE_KERNEL_PKGS
+
+grub:
+  reorder_uefi: CHANGE_REORDER_UEFI
+
+# Note: Ensure "nvme-core.multipath=n" is set in GRUB menu for DGX2
+storage:
+  version: 1
+  config:
+#
+# Enable this block for regular disk partitioning scheme
+#
+#CHANGE_STORAGE_REG  - id: CHANGE_BOOT_DISK_NAME_1
+#CHANGE_STORAGE_REG    type: disk
+#CHANGE_STORAGE_REG    ptable: gpt
+#CHANGE_STORAGE_REG    path: CHANGE_BOOT_DISK_PATH_1
+#CHANGE_STORAGE_REG    name: osdisk1
+#CHANGE_STORAGE_REG    wipe: superblock-recursive
+#CHANGE_STORAGE_REG    #grub_device: 1
+#CHANGE_STORAGE_REG  - id: CHANGE_BOOT_DISK_NAME_2
+#CHANGE_STORAGE_REG    type: disk
+#CHANGE_STORAGE_REG    ptable: gpt
+#CHANGE_STORAGE_REG    path: CHANGE_BOOT_DISK_PATH_2
+#CHANGE_STORAGE_REG    name: osdisk2
+#CHANGE_STORAGE_REG    wipe: superblock-recursive
+#CHANGE_STORAGE_REG    #grub_device: 1
+#CHANGE_STORAGE_REG
+#CHANGE_STORAGE_REG  - id: CHANGE_BOOT_DISK_NAME_1-part1
+#CHANGE_STORAGE_REG    type: partition
+#CHANGE_STORAGE_REG    device: CHANGE_BOOT_DISK_NAME_1
+#CHANGE_STORAGE_REG    number: 1
+#CHANGE_STORAGE_REG    size: 512MB
+#CHANGE_STORAGE_REG    flag: boot
+#CHANGE_STORAGE_REG  - id: CHANGE_BOOT_DISK_NAME_2-part1
+#CHANGE_STORAGE_REG    type: partition
+#CHANGE_STORAGE_REG    device: CHANGE_BOOT_DISK_NAME_2
+#CHANGE_STORAGE_REG    number: 1
+#CHANGE_STORAGE_REG    size: 512MB
+#CHANGE_STORAGE_REG    flag: boot
+#CHANGE_STORAGE_REG
+#CHANGE_STORAGE_REG  - id: CHANGE_BOOT_DISK_NAME_1-part2
+#CHANGE_STORAGE_REG    type: partition
+#CHANGE_STORAGE_REG    device: CHANGE_BOOT_DISK_NAME_1
+#CHANGE_STORAGE_REG    number: 2
+#CHANGE_STORAGE_REG    size: CHANGE_BOOT_DISK_SIZE_1
+#CHANGE_STORAGE_REG    flag: raid
+#CHANGE_STORAGE_REG  - id: CHANGE_BOOT_DISK_NAME_2-part2
+#CHANGE_STORAGE_REG    type: partition
+#CHANGE_STORAGE_REG    device: CHANGE_BOOT_DISK_NAME_2
+#CHANGE_STORAGE_REG    number: 2
+#CHANGE_STORAGE_REG    size: CHANGE_BOOT_DISK_SIZE_2
+#CHANGE_STORAGE_REG    flag: raid
+#CHANGE_STORAGE_REG
+#CHANGE_STORAGE_REG  - id: md_device0
+#CHANGE_STORAGE_REG    type: raid
+#CHANGE_STORAGE_REG    name: md0
+#CHANGE_STORAGE_REG    raidlevel: 1
+#CHANGE_STORAGE_REG    devices:
+#CHANGE_STORAGE_REG      - CHANGE_BOOT_DISK_NAME_1-part2
+#CHANGE_STORAGE_REG      - CHANGE_BOOT_DISK_NAME_2-part2
+#CHANGE_STORAGE_REG
+#CHANGE_STORAGE_REG  - id: CHANGE_BOOT_DISK_NAME_1-part1-fs1
+#CHANGE_STORAGE_REG    type: format
+#CHANGE_STORAGE_REG    fstype: fat32
+#CHANGE_STORAGE_REG    label: boot
+#CHANGE_STORAGE_REG    volume: CHANGE_BOOT_DISK_NAME_1-part1
+#CHANGE_STORAGE_REG  - id: md_root
+#CHANGE_STORAGE_REG    type: format
+#CHANGE_STORAGE_REG    fstype: ext4
+#CHANGE_STORAGE_REG    volume: md_device0
+#CHANGE_STORAGE_REG
+#CHANGE_STORAGE_REG  - id: md_mount
+#CHANGE_STORAGE_REG    type: mount
+#CHANGE_STORAGE_REG    path: /
+#CHANGE_STORAGE_REG    device: md_root
+#CHANGE_STORAGE_REG    options: errors=remount-ro
+#CHANGE_STORAGE_REG    passno: 1
+#CHANGE_STORAGE_REG  - id: boot_mount
+#CHANGE_STORAGE_REG    type: mount
+#CHANGE_STORAGE_REG    path: /boot/efi
+#CHANGE_STORAGE_REG    device: CHANGE_BOOT_DISK_NAME_1-part1-fs1
+#CHANGE_STORAGE_REG    passno: 1
+
+#
+# Enable this block for encrypted root
+#
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_1
+#CHANGE_STORAGE_ENC    type: disk
+#CHANGE_STORAGE_ENC    ptable: gpt
+#CHANGE_STORAGE_ENC    path: CHANGE_BOOT_DISK_PATH_1
+#CHANGE_STORAGE_ENC    name: osdisk1
+#CHANGE_STORAGE_ENC    wipe: superblock-recursive
+#CHANGE_STORAGE_ENC    #grub_device: 1
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_2
+#CHANGE_STORAGE_ENC    type: disk
+#CHANGE_STORAGE_ENC    ptable: gpt
+#CHANGE_STORAGE_ENC    path: CHANGE_BOOT_DISK_PATH_2
+#CHANGE_STORAGE_ENC    name: osdisk2
+#CHANGE_STORAGE_ENC    wipe: superblock-recursive
+#CHANGE_STORAGE_ENC    #grub_device: 1
+#CHANGE_STORAGE_ENC
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_1-part1
+#CHANGE_STORAGE_ENC    type: partition
+#CHANGE_STORAGE_ENC    device: CHANGE_BOOT_DISK_NAME_1
+#CHANGE_STORAGE_ENC    number: 1
+#CHANGE_STORAGE_ENC    size: 512MB
+#CHANGE_STORAGE_ENC    flag: boot
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_2-part1
+#CHANGE_STORAGE_ENC    type: partition
+#CHANGE_STORAGE_ENC    device: CHANGE_BOOT_DISK_NAME_2
+#CHANGE_STORAGE_ENC    number: 1
+#CHANGE_STORAGE_ENC    size: 512MB
+#CHANGE_STORAGE_ENC    flag: boot
+#CHANGE_STORAGE_ENC
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_1-part2
+#CHANGE_STORAGE_ENC    type: partition
+#CHANGE_STORAGE_ENC    device: CHANGE_BOOT_DISK_NAME_1
+#CHANGE_STORAGE_ENC    number: 2
+#CHANGE_STORAGE_ENC    size: 2GB
+#CHANGE_STORAGE_ENC    flag: raid
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_2-part2
+#CHANGE_STORAGE_ENC    type: partition
+#CHANGE_STORAGE_ENC    device: CHANGE_BOOT_DISK_NAME_2
+#CHANGE_STORAGE_ENC    number: 2
+#CHANGE_STORAGE_ENC    size: 2GB
+#CHANGE_STORAGE_ENC    flag: raid
+#CHANGE_STORAGE_ENC
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_1-part3
+#CHANGE_STORAGE_ENC    type: partition
+#CHANGE_STORAGE_ENC    device: CHANGE_BOOT_DISK_NAME_1
+#CHANGE_STORAGE_ENC    number: 3
+#CHANGE_STORAGE_ENC    size: CHANGE_BOOT_DISK_SIZE_1
+#CHANGE_STORAGE_ENC    flag: raid
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_2-part3
+#CHANGE_STORAGE_ENC    type: partition
+#CHANGE_STORAGE_ENC    device: CHANGE_BOOT_DISK_NAME_2
+#CHANGE_STORAGE_ENC    number: 3
+#CHANGE_STORAGE_ENC    size: CHANGE_BOOT_DISK_SIZE_2
+#CHANGE_STORAGE_ENC    flag: raid
+#CHANGE_STORAGE_ENC
+#CHANGE_STORAGE_ENC  - id: md_device0
+#CHANGE_STORAGE_ENC    type: raid
+#CHANGE_STORAGE_ENC    name: md8
+#CHANGE_STORAGE_ENC    raidlevel: 1
+#CHANGE_STORAGE_ENC    devices:
+#CHANGE_STORAGE_ENC      - CHANGE_BOOT_DISK_NAME_1-part2
+#CHANGE_STORAGE_ENC      - CHANGE_BOOT_DISK_NAME_2-part2
+#CHANGE_STORAGE_ENC
+#CHANGE_STORAGE_ENC  - id: md_device1
+#CHANGE_STORAGE_ENC    type: raid
+#CHANGE_STORAGE_ENC    name: md0
+#CHANGE_STORAGE_ENC    raidlevel: 1
+#CHANGE_STORAGE_ENC    devices:
+#CHANGE_STORAGE_ENC      - CHANGE_BOOT_DISK_NAME_1-part3
+#CHANGE_STORAGE_ENC      - CHANGE_BOOT_DISK_NAME_2-part3
+#CHANGE_STORAGE_ENC
+#CHANGE_STORAGE_ENC  - id: md_device1_crypt
+#CHANGE_STORAGE_ENC    type: dm_crypt
+#CHANGE_STORAGE_ENC    volume: md_device1
+#CHANGE_STORAGE_ENC    key: nvidia3d
+#CHANGE_STORAGE_ENC    dm_name: md0_crypt
+#CHANGE_STORAGE_ENC
+#CHANGE_STORAGE_ENC  - id: CHANGE_BOOT_DISK_NAME_1-part1-fs1
+#CHANGE_STORAGE_ENC    type: format
+#CHANGE_STORAGE_ENC    fstype: fat32
+#CHANGE_STORAGE_ENC    label: boot
+#CHANGE_STORAGE_ENC    volume: CHANGE_BOOT_DISK_NAME_1-part1
+#CHANGE_STORAGE_ENC  - id: md_boot
+#CHANGE_STORAGE_ENC    type: format
+#CHANGE_STORAGE_ENC    fstype: ext4
+#CHANGE_STORAGE_ENC    volume: md_device0
+#CHANGE_STORAGE_ENC  - id: md_root
+#CHANGE_STORAGE_ENC    type: format
+#CHANGE_STORAGE_ENC    fstype: ext4
+#CHANGE_STORAGE_ENC    volume: md_device1_crypt
+#CHANGE_STORAGE_ENC
+#CHANGE_STORAGE_ENC  - id: md_device1_mount
+#CHANGE_STORAGE_ENC    type: mount
+#CHANGE_STORAGE_ENC    path: /
+#CHANGE_STORAGE_ENC    device: md_root
+#CHANGE_STORAGE_ENC    options: errors=remount-ro
+#CHANGE_STORAGE_ENC    passno: 1
+#CHANGE_STORAGE_ENC  - id: md_device0_mount
+#CHANGE_STORAGE_ENC    type: mount
+#CHANGE_STORAGE_ENC    path: /boot
+#CHANGE_STORAGE_ENC    device: md_boot
+#CHANGE_STORAGE_ENC    passno: 1
+#CHANGE_STORAGE_ENC  - id: boot_mount
+#CHANGE_STORAGE_ENC    type: mount
+#CHANGE_STORAGE_ENC    path: /boot/efi
+#CHANGE_STORAGE_ENC    device: CHANGE_BOOT_DISK_NAME_1-part1-fs1
+#CHANGE_STORAGE_ENC    passno: 1
+
+swap:
+  size: 0
+
+power_state:
+  mode: CHANGE_POWER_STATE
+  delay: 5
+  message: Installation Complete
+
+sources:
+  05_primary:
+    uri: "file:///curtin/ubuntu-20.04-server-cloudimg-amd64-root.tar.xz"
+    type: "tgz"
+
+write_files:
+  dgx-release:
+    path: /etc/dgx-release
+    content: |
+      DGX_NAME="DGX Server"
+      DGX_PRETTY_NAME="NVIDIA DGX Server"
+      DGX_SWBUILD_DATE="2022-10-11-17-49-32"
+      DGX_SWBUILD_VERSION="5.4.1"
+      DGX_COMMIT_ID="38d36e8"
+      DGX_PLATFORM="CHANGE_DESC_PLATFORM"
+      DGX_SERIAL_NUMBER="CHANGE_SERIAL_NUMBER"
+
+reporting:
+  mylistener:
+    type: journald
+    identifier: "curtin-journald"
+    level: DEBUG
+
+#early_commands:
+#  90_mount_curtin: mount -o bind /curtin/repo/ /var/www/html/
+#  91_chown_www: chown www-data:www-data /curtin/repo /var/www/html
+
+late_commands:
+  # SSH is configured differently in the cloud images so reconfigure it here to get back
+  # to the default settings
+  10_conf_ssh: ["curtin", "in-target", "--", "sh", "-c", "dpkg-reconfigure openssh-server"]
+  11_conf_ssh: ["curtin", "in-target", "--", "sh", "-c", "sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config"]
+
+  # Skip writing to PLAT-release file on install
+  12_conf_ssh: ["curtin", "in-target", "--", "sh", "-c", "touch /tmp/ota_skip_write"]
+
+  23_apt_update: ["curtin", "in-target", "--", "sh", "-c", "DEBIAN_FRONTEND=noninteractive apt-get update -y"]
+  24_install_pkgs: ["curtin", "in-target", "--", "sh", "-c", "DEBIAN_FRONTEND=noninteractive RUN_FW_UPDATER=no apt-get install -y --no-install-recommends CHANGE_INSTALL_PKGS"]
+  25_unattended_upgrades: ["curtin", "in-target", "--", "sh", "-c", "DEBIAN_FRONTEND=noninteractive apt-get purge -y unattended-upgrades"]
+  26_check_restricted: ["curtin", "in-target", "--", "bash", "-c",
+    "restricted=1; \
+    if ( CHANGE_MLNX_FWUPD ); then \
+      mst start; \
+      restrictedArr=$(lspci | grep -i bluefield-2 | grep -Eo '^[^ ]+'); \
+      for i in $(echo $restrictedArr); do \
+        if mlxprivhost -d $i q | grep level | grep -q RESTRICTED; then \
+          restricted=0; \
+          break; \
+        fi \
+      done; \
+      if [ $restricted -ne 0 ]; then \
+        apt install -y --reinstall mlnx-fw-updater; \
+      fi \
+    fi"]
+
+  # Rewrite sources list
+  30_write_sources: ["curtin", "in-target", "--", "sh", "-c", "echo deb http://us.archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse > /etc/apt/sources.list"]
+  31_write_sources: ["curtin", "in-target", "--", "sh", "-c", "echo deb http://us.archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse >> /etc/apt/sources.list"]
+  32_write_sources: ["curtin", "in-target", "--", "sh", "-c", "echo deb http://security.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse >> /etc/apt/sources.list"]
+
+  # [bug 3099036]: create auth.log now so the fail2ban service can start
+  33_touch_auth: ["curtin", "in-target", "--", "sh", "-c", "sudo -u syslog -g adm touch /var/log/auth.log && chmod 644 /var/log/auth.log || true"]
+
+  42_openibd: ["curtin", "in-target", "--", "sh", "-c", "systemctl enable openibd.service || true"]
+
+  # This next line must be split across two lines or the sed search replace will not work
+  43_nv_peer_mem: ["curtin", "in-target", "--", "sh", "-c",
+    "/usr/sbin/update-rc.d nv_peer_mem defaults || true"]
+
+  44_mlnx_pxe: ["curtin", "in-target", "--", "sh", "-c", "mlnx_pxe_setup.bash || true"]
+
+  # Enable fabric manager service
+  45_enable_fm: ["curtin", "in-target", "--", "sh", "-c", "systemctl enable nvidia-fabricmanager.service"]
+
+  # Disable SRP
+  46_disable_srp: ["curtin", "in-target", "--", "sh", "-c", "systemctl disable srp_daemon.service"]
+  47_disable_srp_tools: ["curtin", "in-target", "--", "sh", "-c", "systemctl disable srptools.service"]
+  48_disable_rshim: ["curtin", "in-target", "--", "sh", "-c",
+    "if ! lspci | grep -qi bluefield; then \
+       systemctl disable rshim.service; \
+     fi"]
+  49_enable_dcgm: ["curtin", "in-target", "--", "sh", "-c", "systemctl enable nvidia-dcgm.service"]
+  50_enable_nvpm: ["curtin", "in-target", "--", "sh", "-c", "systemctl enable nvidia-persistenced.service"]
+
+  # Handle RAID creation
+  50_mkdir_raid: ["curtin", "in-target", "--", "sh", "-c", "mkdir -p /raid"]
+  51_data_raid: ["curtin", "in-target", "--", "sh", "-c",
+    "if CHANGE_REBUILD_RAID; then \
+       touch /var/tmp/first-boot-check-raid; \
+     else \
+       echo \"\n\n# Make sure that [device] below is correct\" >> /etc/fstab; \
+       echo \"# Uncomment the next line to mount raid on /raid\" >> /etc/fstab; \
+       echo \"#/dev/[device] /raid ext4 defaults,nofail 0 2\" >> /etc/fstab; \
+     fi"]
+
+  # Disable ipmisol if encrypting or else the cryptpass prompt only appears
+  # on the SOL interface
+  53_unset_ipmisol: ["curtin", "in-target", "--", "sh", "-c",
+    "if CHANGE_IPMISOL; then \
+       if [ -f /etc/default/grub.d/ipmisol.cfg ]; then \
+         sed -i 's/^/#/' /etc/default/grub.d/ipmisol.cfg; \
+         update-grub; \
+       fi \
+     fi"]
+
+  # Copy logs from the install environment into the target
+  90_mkdir_installer_logs: mkdir -p $TARGET_MOUNT_POINT/var/log/installer
+  91_copy_logs: cp -rf /var/log/* $TARGET_MOUNT_POINT/var/log/installer/
+
+  # Replicate boot partition
+  97_replicate_boot_partition0: ["bash", "-c",
+    "if [ $(mount | grep '/boot/efi' | awk '{print $1}') == \"/dev/CHANGE_BOOT_DISK_NAME_PART1_1\" ]; then \
+       umount /dev/CHANGE_BOOT_DISK_NAME_PART1_1; \
+       dd if=/dev/CHANGE_BOOT_DISK_NAME_PART1_1 of=/dev/CHANGE_BOOT_DISK_NAME_PART1_2; \
+     elif [ $(mount | grep '/boot/efi' | awk '{print $1}') == \"/dev/CHANGE_BOOT_DISK_NAME_PART1_2\" ]; then \
+       umount /dev/CHANGE_BOOT_DISK_NAME_PART1_2; \
+       dd if=/dev/CHANGE_BOOT_DISK_NAME_PART1_2 of=/dev/CHANGE_BOOT_DISK_NAME_PART1_1; \
+     else \
+       echo \"Skipping ESP replication\"; \
+     fi"]
+
+  # Prepare oem-config
+  98_disable_tasksel: ["curtin", "in-target", "--", "sh", "-c",
+    "if [ -f /usr/share/tasksel/descs/ubuntu-tasks.desc ]; then \
+       mv /usr/share/tasksel/descs/ubuntu-tasks.desc /usr/share/tasksel/descs/ubuntu-tasks.desc.orig; \
+     fi"]
+  99_oem_config_prepare: ["curtin", "in-target", "--", "sh", "-c", "oem-config-prepare --quiet"]
+
+    # Create user
+  100_create_user: ["curtin", "in-target", "--", "sh", "-c",
+    "adduser --disabled-password --gecos --quiet supdev"]
+  101_add_user_group: ["curtin", "in-target", "--", "sh", "-c",
+    "usermod -aG sudo supdev"]
+  102_set_user_password: ["curtin", "in-target", "--", "sh", "-c",
+    "echo 'supdev:123456' | chpasswd"]
+
+    #103_conf_docker: ["curtin", "in-target", "--", "sh", "-c", "sed -i 's/172.17.0.1/193.0.0.1/' /etc/systemd/system/docker.service.d/docker-override.conf"]
+  103_conf_docker: ["curtin", "in-target", "--", "sh", "-c", "/usr/bin/wget http://172.17.224.139/docker-override.conf -P /etc/systemd/system/docker.service.d/"]
+  104_change_hostname: ["curtin", "in-target", "--", "sh", "-c", "echo \"DGX-A100\" > /etc/hostname"]
+  105_mkdir_public: ["curtin", "in-target", "--", "sh", "-c", "mkdir -p /public/data0"]
+  106_add_sudo: ["curtin", "in-target", "--", "sh", "-c", "echo \"supdev ALL=(ALL) NOPASSWD:ALL\" >> /etc/sudoers.d/supdev"]
+
+  107_set_root_password: ["curtin", "in-target", "--", "sh", "-c",
+    "echo 'root:123456' | chpasswd"]
+  108_set_root_ssh: ["curtin", "in-target", "--", "sh", "-c", "sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config"]
